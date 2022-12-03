@@ -108,6 +108,10 @@
   {
     "key": "cmd+k f",
     "command": "workbench.action.toggleEditorWidths"
+  },
+  {
+    "key": "cmd+k d",
+    "command": "-workbench.files.action.compareWithSaved"
   }
 ]
 
