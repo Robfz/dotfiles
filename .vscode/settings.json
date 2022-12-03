@@ -1,0 +1,19 @@
+{
+    "telemetry.telemetryLevel": "off",
+    "editor.fontFamily": "'Fira Code', Menlo, Monaco, 'Courier New', monospace",
+    "editor.fontSize": 18,
+    "editor.fontWeight": "500",
+    "editor.fontLigatures": true,
+    "editor.tabSize": 2,
+    "editor.minimap.renderCharacters": false,
+    "redhat.telemetry.enabled": false,
+    "git.autofetch": true,
+    "files.autoSaveDelay": 1000000,
+    "workbench.colorTheme": "Sapphire",
+    "protoc": {
+        "options": ["-I=~/.cache/buf/v1/module/data/buf.build"]
+    },
+    "buf.binaryPath": "/opt/homebrew/bin/buf",
+    "go.toolsManagement.autoUpdate": true
+}
+
