@@ -1,0 +1,32 @@
+font-size = 14
+
+keybind = cmd+k>v=new_split:right
+keybind = cmd+k>h=new_split:down
+keybind = cmd+k>z=toggle_split_zoom
+keybind = cmd+k>i=goto_split:up
+keybind = cmd+k>k=goto_split:down
+keybind = cmd+k>j=goto_split:left
+keybind = cmd+k>l=goto_split:right
+
+# macos-icon = blueprint
+
+# Good themes:
+# theme = Duckbones
+# theme = Galizur
+theme = "Github Dark Colorblind"
+# theme = "Hybrid"
+# theme = "Iceberg Dark"
+# theme = "iTerm2 Tango Dark"
+# theme = Jellybeans
+# theme = "Liquid Carbon Transparent"
+# theme = "Matte Black"
+# theme = Molokai
+# theme = "Paul Millr"
+# theme = Rapture
+# theme = Snazzy
+# theme = Synthwave
+# theme = "TokyoNight Night"
+# theme = Vercel
+
+unfocused-split-opacity = 0.85
+unfocused-split-fill = #444444
