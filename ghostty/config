@@ -2,13 +2,13 @@ font-size = 14
 
 keybind = cmd+k>v=new_split:right
 keybind = cmd+k>h=new_split:down
-keybind = cmd+k>z=toggle_split_zoom
+keybind = cmd+k>f=toggle_split_zoom
 keybind = cmd+k>i=goto_split:up
 keybind = cmd+k>k=goto_split:down
 keybind = cmd+k>j=goto_split:left
 keybind = cmd+k>l=goto_split:right
 
-# macos-icon = blueprint
+macos-icon = official
 
 # Good themes:
 # theme = Duckbones
