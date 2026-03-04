@@ -1,0 +1,34 @@
+{
+    // Vim: h=insert, j=left, i=up, k=down, l=right (arrow-key layout)
+    "vim.normalModeKeyBindingsNonRecursive": [
+        { "before": ["h"], "after": ["i"] },
+        { "before": ["j"], "after": ["h"] },
+        { "before": ["i"], "after": ["k"] },
+        { "before": ["k"], "after": ["j"] }
+    ],
+    "vim.visualModeKeyBindingsNonRecursive": [
+        { "before": ["h"], "after": ["i"] },
+        { "before": ["j"], "after": ["h"] },
+        { "before": ["i"], "after": ["k"] },
+        { "before": ["k"], "after": ["j"] }
+    ],
+    "vim.operatorPendingModeKeyBindingsNonRecursive": [
+        { "before": ["h"], "after": ["i"] },
+        { "before": ["j"], "after": ["h"] },
+        { "before": ["i"], "after": ["k"] },
+        { "before": ["k"], "after": ["j"] }
+    ],
+    "window.commandCenter": true,
+    "editor.fontFamily": "'Fira Code', Menlo, Monaco, 'Courier New', monospace",
+    "editor.fontSize": 18,
+    "editor.fontWeight": "500",
+    "editor.fontLigatures": true,
+    "editor.lineNumbers": "relative",
+    "editor.tabSize": 2,
+    "editor.minimap.renderCharacters": false,
+    "git.autofetch": true,
+    "files.autoSaveDelay": 1000000,
+    "cursor.cpp.disabledLanguages": [],
+    "go.toolsManagement.autoUpdate": true,
+    "editor.cursorSmoothCaretAnimation": "on",
+}
