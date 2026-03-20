@@ -30,5 +30,5 @@
     "files.autoSaveDelay": 1000000,
     "cursor.cpp.disabledLanguages": [],
     "go.toolsManagement.autoUpdate": true,
-    "editor.cursorSmoothCaretAnimation": "on",
+    "editor.cursorSmoothCaretAnimation": "on"
 }
