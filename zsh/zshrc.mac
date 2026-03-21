@@ -16,6 +16,9 @@ source $(brew --prefix)/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zs
 # fzf (Ctrl+R history, Ctrl+T file search, Alt+C cd)
 source <(fzf --zsh)
 
+# zoxide (smarter cd)
+eval "$(zoxide init zsh)"
+
 # Prompt
 autoload -Uz vcs_info
 zstyle ':vcs_info:git:*' formats '%F{blue}git:(%F{red}%b%F{blue})%f'
