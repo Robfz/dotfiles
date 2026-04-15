@@ -1,0 +1,63 @@
+# History
+HISTFILE=~/.zsh_history
+HISTSIZE=10000
+SAVEHIST=10000
+setopt share_history hist_ignore_dups hist_ignore_space
+autoload -U history-search-end
+zle -N history-beginning-search-backward-end history-search-end
+zle -N history-beginning-search-forward-end history-search-end
+bindkey '^[[A' history-beginning-search-backward-end
+bindkey '^[[B' history-beginning-search-forward-end
+
+# Completion
+[[ -d "$HOME/.docker/completions" ]] && fpath=($HOME/.docker/completions $fpath)
+autoload -Uz compinit && compinit
+zstyle ':completion:*' menu select
+command -v kubectl &>/dev/null && source <(kubectl completion zsh)
+
+# Plugins
+if command -v brew &>/dev/null; then
+  source $(brew --prefix)/share/zsh-autosuggestions/zsh-autosuggestions.zsh
+  source $(brew --prefix)/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
+fi
+
+# fzf (Ctrl+R history, Ctrl+T file search, Alt+C cd)
+source <(fzf --zsh)
+
+# Prompt
+autoload -Uz vcs_info
+# formats: used during normal git state → git:(branch)
+zstyle ':vcs_info:git:*' formats       '%F{blue}git:(%F{red}%b%F{blue})%f'
+# actionformats: used when an action is in progress (merge, rebase, etc.) → git:(branch|merge)
+zstyle ':vcs_info:git:*' actionformats '%F{blue}git:(%F{red}%b%F{blue}|%F{yellow}%a%F{blue})%f'
+# populate $vcs_info_msg_0_ before each prompt
+precmd() { vcs_info }
+# allow parameter expansion and command substitution inside $PROMPT
+setopt prompt_subst
+
+# prints a yellow ✗ when the working tree has uncommitted changes
+_git_dirty() {
+  git rev-parse --is-inside-work-tree &>/dev/null || return
+  git diff --quiet 2>/dev/null || echo ' %B%F{yellow}✗%f%b'
+}
+
+# prints a red conflict count (e.g. "!2 conflicts") when merge conflicts are present
+_git_conflicts() {
+  git rev-parse --is-inside-work-tree &>/dev/null || return
+  local n
+  n=$(git diff --name-only --diff-filter=U 2>/dev/null | wc -l | tr -d ' ')
+  [[ $n -gt 0 ]] && echo " %B%F{red}!$n conflicts%f%b"
+}
+
+# Prompt layout: ➜ dir git:(branch) [conflicts] [dirty]
+# %(?:...:...) → green ➜ on success, red on failure
+# %1~          → current directory (last component only)
+# vcs_info_msg_0_ → git info populated by precmd above
+PROMPT='%(?:%B%F{green}:%B%F{red})➜%f%b %B%F{cyan}%1~%f%b${vcs_info_msg_0_:+ %B$vcs_info_msg_0_%b}$(_git_conflicts)$(_git_dirty) '
+
+# Tools
+export PATH="${ASDF_DATA_DIR:-$HOME/.asdf}/shims:$PATH"
+export PATH="$HOME/.local/bin:$PATH"
+
+# Machine-local secrets and overrides (not committed)
+[[ -f ~/.zshrc.local ]] && source ~/.zshrc.local
