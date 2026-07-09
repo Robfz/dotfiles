@@ -44,6 +44,24 @@ else
   echo "pi: ../pi-extensions not found; skipping (git clone git@github.com:Robfz/pi-extensions.git next to dotfiles)"
 fi
 
+# pi coding agent (macOS: homebrew node, wrapper bypasses asdf shims — see docs/pi.md)
+if [ "$(uname)" = "Darwin" ] && [ -x /opt/homebrew/bin/node ]; then
+  PATH="/opt/homebrew/bin:$PATH" /opt/homebrew/bin/npm install -g @earendil-works/pi-coding-agent
+  mkdir -p ~/.local/bin
+  cp -f bin/pi ~/.local/bin/pi
+  # let `pi update self` run npm without asdf's node resolution
+  if command -v jq > /dev/null; then
+    mkdir -p ~/.pi/agent
+    [ -f ~/.pi/agent/settings.json ] || echo '{}' > ~/.pi/agent/settings.json
+    jq '.npmCommand = ["/opt/homebrew/bin/node", "/opt/homebrew/lib/node_modules/npm/bin/npm-cli.js"]' \
+      ~/.pi/agent/settings.json > ~/.pi/agent/settings.json.tmp && mv ~/.pi/agent/settings.json.tmp ~/.pi/agent/settings.json
+  else
+    echo "pi: jq not found; skipping npmCommand setting (pi update self may fail in folders without an asdf node)"
+  fi
+else
+  echo "pi: homebrew node not found; skipping pi install"
+fi
+
 # cursor (macOS only)
 if [ "$(uname)" = "Darwin" ]; then
   cp -f cursor/settings.json ~/Library/Application\ Support/Cursor/User/settings.json
