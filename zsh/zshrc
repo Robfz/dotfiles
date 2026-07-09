@@ -24,6 +24,9 @@ fi
 # fzf (Ctrl+R history, Ctrl+T file search, Alt+C cd)
 source <(fzf --zsh)
 
+# zoxide (smarter cd)
+command -v zoxide &>/dev/null && eval "$(zoxide init zsh)"
+
 # Prompt
 autoload -Uz vcs_info
 # formats: used during normal git state → git:(branch)
