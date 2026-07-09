@@ -30,6 +30,20 @@ cp -f herdr/config.toml ~/.config/herdr/config.toml
 mkdir -p ~/.claude
 cp -f claude/statusline-command.sh ~/.claude/statusline-command.sh
 
+# pi (delegates to sibling pi-extensions repo, if cloned)
+DOTFILES_DIR="$(cd "$(dirname "$0")" && pwd)"
+PI_EXTENSIONS_DIR="$DOTFILES_DIR/../pi-extensions"
+if [ -d "$PI_EXTENSIONS_DIR" ]; then
+  bash "$PI_EXTENSIONS_DIR/scripts/link.sh"
+  if command -v jq > /dev/null; then
+    bash "$PI_EXTENSIONS_DIR/scripts/apply-settings.sh"
+  else
+    echo "pi: jq not found; skipping apply-settings.sh"
+  fi
+else
+  echo "pi: ../pi-extensions not found; skipping (git clone git@github.com:Robfz/pi-extensions.git next to dotfiles)"
+fi
+
 # cursor (macOS only)
 if [ "$(uname)" = "Darwin" ]; then
   cp -f cursor/settings.json ~/Library/Application\ Support/Cursor/User/settings.json
