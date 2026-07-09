@@ -6,7 +6,7 @@
 input=$(cat)
 
 # ── Parse JSON fields ──────────────────────────────────────────────
-model_name=$(echo "$input" | jq -r '.model.display_name')
+model_name=$(echo "$input" | jq -r '.model.display_name' | sed 's/ (\([^)]*\) context)/\ \1/')
 current_dir=$(echo "$input" | jq -r '.workspace.current_dir')
 project_dir=$(echo "$input" | jq -r '.workspace.project_dir')
 output_style=$(echo "$input" | jq -r '.output_style.name // "default"')
