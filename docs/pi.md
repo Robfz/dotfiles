@@ -20,13 +20,19 @@ Three pieces, all applied by `install.sh` (macOS only, requires homebrew node):
    wrapper always wins — including over the `pi` symlink npm drops in
    `/opt/homebrew/bin` (harmless, leave it; npm recreates it on update).
 
-3. **Self-update setting** (`npmCommand` in `~/.pi/agent/settings.json`):
-   `pi update self` spawns bare `npm` from PATH, which hits the asdf shim and
-   fails in folders without a pinned node. The setting makes pi run homebrew's
-   npm via its JS entry point instead:
+3. **npm wrapper for pi** (`bin/pi-npm` → `~/.local/bin/pi-npm`, wired via
+   `npmCommand` in `~/.pi/agent/settings.json`): pi spawns npm for
+   `pi update self` and for extension installs. Two failure modes without this:
+   bare `npm` from PATH hits the asdf shim directly, and even with a working
+   npm, its lifecycle scripts (`sh -c node ...`) resolve node through PATH —
+   npm does not put its own node first — so postinstalls (e.g. protobufjs)
+   fail with "No version is set for command node". `pi-npm` runs homebrew's
+   npm via its JS entry point *and* prepends `/opt/homebrew/bin` to PATH for
+   that process only, so lifecycle scripts get the same node. The PATH change
+   doesn't leak into pi itself or its bash sessions:
 
    ```json
-   "npmCommand": ["/opt/homebrew/bin/node", "/opt/homebrew/lib/node_modules/npm/bin/npm-cli.js"]
+   "npmCommand": ["/Users/roberto/.local/bin/pi-npm"]
    ```
 
    Note: the sibling pi-extensions repo's `apply-settings.sh` also manages
