@@ -29,34 +29,39 @@ command -v zoxide &>/dev/null && eval "$(zoxide init zsh)"
 
 # Prompt
 autoload -Uz vcs_info
+# allow parameter expansion inside $PROMPT
+setopt prompt_subst
+
 # formats: used during normal git state → git:(branch)
 zstyle ':vcs_info:git:*' formats       '%F{blue}git:(%F{red}%b%F{blue})%f'
 # actionformats: used when an action is in progress (merge, rebase, etc.) → git:(branch|merge)
 zstyle ':vcs_info:git:*' actionformats '%F{blue}git:(%F{red}%b%F{blue}|%F{yellow}%a%F{blue})%f'
-# populate $vcs_info_msg_0_ before each prompt
-precmd() { vcs_info }
-# allow parameter expansion and command substitution inside $PROMPT
-setopt prompt_subst
 
-# prints a yellow ✗ when the working tree has uncommitted changes
-_git_dirty() {
-  git rev-parse --is-inside-work-tree &>/dev/null || return
-  git diff --quiet 2>/dev/null || echo ' %B%F{yellow}✗%f%b'
+# Status glyph ● encodes state: green = clean, yellow = dirty, red·count = conflicts.
+# ↑n ↓n show commits ahead/behind upstream. One `git status` call per prompt.
+precmd() {
+  local st branch
+  st=$(git status --porcelain --branch 2>/dev/null)
+  branch=${st%%$'\n'*}    # "## main...origin/main [ahead 2, behind 1]"
+  st=${st#*$'\n'}; [[ $st == $branch ]] && st=''   # drop header; empty if header-only
+  if [[ $st =~ $'(^|\n)(DD|AU|UD|UA|DU|AA|UU) ' ]]; then
+    local n=$(print -r -- $st | grep -cE '^(DD|AU|UD|UA|DU|AA|UU) ')
+    _git_status_glyph="%F{red}●$n%f"
+  elif [[ -n $st ]]; then
+    _git_status_glyph='%F{yellow}●%f'
+  else
+    _git_status_glyph='%F{green}●%f'
+  fi
+  [[ $branch =~ 'ahead ([0-9]+)'  ]] && _git_status_glyph+=" %F{cyan}↑$match[1]%f"
+  [[ $branch =~ 'behind ([0-9]+)' ]] && _git_status_glyph+=" %F{cyan}↓$match[1]%f"
+  vcs_info
 }
 
-# prints a red conflict count (e.g. "!2 conflicts") when merge conflicts are present
-_git_conflicts() {
-  git rev-parse --is-inside-work-tree &>/dev/null || return
-  local n
-  n=$(git diff --name-only --diff-filter=U 2>/dev/null | wc -l | tr -d ' ')
-  [[ $n -gt 0 ]] && echo " %B%F{red}!$n conflicts%f%b"
-}
-
-# Prompt layout: ➜ dir git:(branch) [conflicts] [dirty]
+# Prompt layout: ➜ dir git:(branch) ●
 # %(?:...:...) → green ➜ on success, red on failure
 # %1~          → current directory (last component only)
-# vcs_info_msg_0_ → git info populated by precmd above
-PROMPT='%(?:%B%F{green}:%B%F{red})➜%f%b %B%F{cyan}%1~%f%b${vcs_info_msg_0_:+ %B$vcs_info_msg_0_%b}$(_git_conflicts)$(_git_dirty) '
+# vcs_info_msg_0_ → git info populated by precmd above (glyph only shown inside a repo)
+PROMPT='%(?:%B%F{green}:%B%F{red})➜%f%b %B%F{cyan}%1~%f%b${vcs_info_msg_0_:+ %B$vcs_info_msg_0_%b $_git_status_glyph} '
 
 # Tools
 export PATH="${ASDF_DATA_DIR:-$HOME/.asdf}/shims:$PATH"
