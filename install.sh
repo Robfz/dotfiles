@@ -19,8 +19,9 @@ cp -Rf nvim/. ~/.config/nvim/
 cp -f zsh/zshrc ~/.zshrc
 
 # ghostty
-mkdir -p ~/.config/ghostty
+mkdir -p ~/.config/ghostty/themes
 cp -f ghostty/config ~/.config/ghostty/config
+cp -f ghostty/themes/* ~/.config/ghostty/themes/
 
 # herdr
 mkdir -p ~/.config/herdr

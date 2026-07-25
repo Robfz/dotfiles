@@ -1,0 +1,37 @@
+# pi-dark — based on pi coding agent's built-in dark theme
+# https://github.com/earendil-works/pi (Tomorrow Night-inspired palette)
+
+# black
+palette = 0=#282832
+palette = 8=#808080
+# red
+palette = 1=#cc6666
+palette = 9=#e08c8c
+# green
+palette = 2=#b5bd68
+palette = 10=#c9d17d
+# yellow
+palette = 3=#f0c674
+palette = 11=#ffff00
+# blue
+palette = 4=#81a2be
+palette = 12=#5f87ff
+# magenta
+palette = 5=#b294bb
+palette = 13=#d183e8
+# cyan
+palette = 6=#8abeb7
+palette = 14=#00d7ff
+# white
+palette = 7=#d4d4d4
+palette = 15=#eaeaea
+
+# background borrowed from "GitHub Dark Colorblind"
+background = #0d1117
+foreground = #d4d4d4
+
+cursor-color = #8abeb7
+cursor-text = #0d1117
+
+selection-background = #3a3a4a
+selection-foreground = #d4d4d4
