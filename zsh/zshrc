@@ -63,6 +63,13 @@ precmd() {
 # vcs_info_msg_0_ → git info populated by precmd above (glyph only shown inside a repo)
 PROMPT='%(?:%B%F{green}:%B%F{red})➜%f%b %B%F{cyan}%1~%f%b${vcs_info_msg_0_:+ %B$vcs_info_msg_0_%b $_git_status_glyph} '
 
+# Aliases
+if command -v eza &>/dev/null; then
+  alias ls='eza'
+  alias ll='eza -la --git'
+  alias lt='eza --tree --level=2'
+fi
+
 # Tools
 export PATH="${ASDF_DATA_DIR:-$HOME/.asdf}/shims:$PATH"
 export PATH="$HOME/.local/bin:$PATH"
