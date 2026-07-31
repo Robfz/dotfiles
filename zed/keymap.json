@@ -1,0 +1,48 @@
+// Zed keymap — ported from Cursor custom keybindings
+// Base keymap stays "VSCode" (set in settings.json)
+[
+  {
+    "context": "Workspace",
+    "bindings": {
+      "cmd-k 7": "pane::SplitRight",
+      "cmd-k 8": "pane::SplitDown",
+      "cmd-k i": ["workspace::ActivatePaneInDirection", "Up"],
+      "cmd-k k": ["workspace::ActivatePaneInDirection", "Down"],
+      "cmd-k j": ["workspace::ActivatePaneInDirection", "Left"],
+      "cmd-k l": ["workspace::ActivatePaneInDirection", "Right"],
+      "cmd-k shift-i": ["workspace::SwapPaneInDirection", "Up"],
+      "cmd-k shift-k": ["workspace::SwapPaneInDirection", "Down"],
+      "cmd-k shift-j": ["workspace::SwapPaneInDirection", "Left"],
+      "cmd-k shift-l": ["workspace::SwapPaneInDirection", "Right"],
+      "cmd-k f": "workspace::ToggleZoom",
+      "cmd-i": "agent::ToggleFocus"
+    }
+  },
+  {
+    "context": "Editor",
+    "bindings": {
+      "cmd-k d": "editor::GoToDefinition",
+      "cmd-k e": "editor::GoToDiagnostic"
+    }
+  },
+  // Vim: h=insert, j=left, i=up, k=down, l=right (arrow-key layout, ported from Cursor)
+  {
+    // Normal, visual and operator-pending modes: i/j/k as arrows,
+    // h takes over i's "inner object" role (e.g. `dhw` = diw)
+    "context": "VimControl && !menu",
+    "bindings": {
+      "j": "vim::Left",
+      "k": "vim::Down",
+      "i": "vim::Up",
+      "h": ["vim::PushObject", { "around": false }]
+    }
+  },
+  {
+    // Normal mode: h enters insert, keep i as up (overrides default InsertBefore)
+    "context": "vim_mode == normal",
+    "bindings": {
+      "h": "vim::InsertBefore",
+      "i": "vim::Up"
+    }
+  }
+]

@@ -23,6 +23,12 @@ mkdir -p ~/.config/ghostty/themes
 cp -f ghostty/config ~/.config/ghostty/config
 cp -f ghostty/themes/* ~/.config/ghostty/themes/
 
+# zed
+mkdir -p ~/.config/zed/themes
+cp -f zed/settings.json ~/.config/zed/settings.json
+cp -f zed/keymap.json ~/.config/zed/keymap.json
+cp -f zed/themes/* ~/.config/zed/themes/
+
 # herdr
 mkdir -p ~/.config/herdr
 cp -f herdr/config.toml ~/.config/herdr/config.toml
