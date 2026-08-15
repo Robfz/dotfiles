@@ -72,6 +72,37 @@ fi
 
 # cursor (macOS only)
 if [ "$(uname)" = "Darwin" ]; then
-  cp -f cursor/settings.json ~/Library/Application\ Support/Cursor/User/settings.json
-  cp -f cursor/keybindings.json ~/Library/Application\ Support/Cursor/User/keybindings.json
+  CURSOR_USER="$HOME/Library/Application Support/Cursor/User"
+  mkdir -p "$CURSOR_USER"
+  cp -f cursor/settings.json "$CURSOR_USER/settings.json"
+  cp -f cursor/keybindings.json "$CURSOR_USER/keybindings.json"
+
+  # Ensure VSCodeVim (Cursor IDE Vim Mode) is installed
+  if command -v cursor > /dev/null; then
+    cursor --install-extension vscodevim.vim --force >/dev/null 2>&1 || true
+  fi
+
+  # Cursor Tab enable/disable is stored in app persistent storage, not settings.json
+  CURSOR_STATE_DB="$CURSOR_USER/globalStorage/state.vscdb"
+  if [ -f "$CURSOR_STATE_DB" ] && command -v python3 > /dev/null; then
+    python3 - "$CURSOR_STATE_DB" <<'PY'
+import json, sqlite3, sys
+db_path = sys.argv[1]
+key = "src.vs.platform.reactivestorage.browser.reactiveStorageServiceImpl.persistentStorage.applicationUser"
+con = sqlite3.connect(db_path)
+row = con.execute("SELECT value FROM ItemTable WHERE key = ?", (key,)).fetchone()
+data = json.loads(row[0]) if row and row[0] else {}
+if data.get("cppEnabled") is not False:
+    data["cppEnabled"] = False
+    data.pop("cppSnoozed", None)
+    data.pop("cppEnabledBeforeSnooze", None)
+    con.execute(
+        "INSERT INTO ItemTable(key, value) VALUES(?, ?) "
+        "ON CONFLICT(key) DO UPDATE SET value = excluded.value",
+        (key, json.dumps(data, separators=(",", ":"))),
+    )
+    con.commit()
+con.close()
+PY
+  fi
 fi

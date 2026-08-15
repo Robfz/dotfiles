@@ -28,9 +28,11 @@
     "editor.minimap.renderCharacters": false,
     "git.autofetch": true,
     "files.autoSaveDelay": 1000000,
+    // Cursor Tab global toggle lives in app storage (see install.sh); keep languages unrestricted here.
     "cursor.cpp.disabledLanguages": [],
     "go.toolsManagement.autoUpdate": true,
     "editor.cursorSmoothCaretAnimation": "on",
+    // Always keep VSCodeVim enabled (Cursor IDE Vim Mode).
     "vim.disableExtension": false,
     "window.autoDetectColorScheme": false
 }
