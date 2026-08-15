@@ -32,10 +32,11 @@ autoload -Uz vcs_info
 # allow parameter expansion inside $PROMPT
 setopt prompt_subst
 
+# Icy/mint palette: ice blue structure, theme-defined bright magenta branch, lavender action.
 # formats: used during normal git state → git:(branch)
-zstyle ':vcs_info:git:*' formats       '%F{blue}git:(%F{red}%b%F{blue})%f'
+zstyle ':vcs_info:git:*' formats       '%F{#7dcfff}git:(%F{13}%b%F{#7dcfff})%f'
 # actionformats: used when an action is in progress (merge, rebase, etc.) → git:(branch|merge)
-zstyle ':vcs_info:git:*' actionformats '%F{blue}git:(%F{red}%b%F{blue}|%F{yellow}%a%F{blue})%f'
+zstyle ':vcs_info:git:*' actionformats '%F{#7dcfff}git:(%F{13}%b%F{#7dcfff}|%F{#c4b5e0}%a%F{#7dcfff})%f'
 
 # Status glyph ● encodes state: green = clean, yellow = dirty, red·count = conflicts.
 # ↑n ↓n show commits ahead/behind upstream. One `git status` call per prompt.
@@ -46,14 +47,14 @@ precmd() {
   st=${st#*$'\n'}; [[ $st == $branch ]] && st=''   # drop header; empty if header-only
   if [[ $st =~ $'(^|\n)(DD|AU|UD|UA|DU|AA|UU) ' ]]; then
     local n=$(print -r -- $st | grep -cE '^(DD|AU|UD|UA|DU|AA|UU) ')
-    _git_status_glyph="%F{red}●$n%f"
+    _git_status_glyph="%F{#f28b82}●$n%f"
   elif [[ -n $st ]]; then
-    _git_status_glyph='%F{yellow}●%f'
+    _git_status_glyph='%F{#e6c384}●%f'
   else
-    _git_status_glyph='%F{green}●%f'
+    _git_status_glyph='%F{#8bd5ca}●%f'
   fi
-  [[ $branch =~ 'ahead ([0-9]+)'  ]] && _git_status_glyph+=" %F{cyan}↑$match[1]%f"
-  [[ $branch =~ 'behind ([0-9]+)' ]] && _git_status_glyph+=" %F{cyan}↓$match[1]%f"
+  [[ $branch =~ 'ahead ([0-9]+)'  ]] && _git_status_glyph+=" %F{#89ddff}↑$match[1]%f"
+  [[ $branch =~ 'behind ([0-9]+)' ]] && _git_status_glyph+=" %F{#c4b5e0}↓$match[1]%f"
   vcs_info
 }
 
@@ -61,7 +62,7 @@ precmd() {
 # %(?:...:...) → green ➜ on success, red on failure
 # %1~          → current directory (last component only)
 # vcs_info_msg_0_ → git info populated by precmd above (glyph only shown inside a repo)
-PROMPT='%(?:%B%F{green}:%B%F{red})➜%f%b %B%F{cyan}%1~%f%b${vcs_info_msg_0_:+ %B$vcs_info_msg_0_%b $_git_status_glyph} '
+PROMPT='%(?:%B%F{#8bd5ca}:%B%F{#f28b82})➜%f%b %B%F{#89ddff}%1~%f%b${vcs_info_msg_0_:+ %B$vcs_info_msg_0_%b $_git_status_glyph} '
 
 # Aliases
 if command -v eza &>/dev/null; then
