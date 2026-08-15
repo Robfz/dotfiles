@@ -1,3 +1,3 @@
 #!/bin/sh
-# Runs pi on homebrew's node, bypassing asdf's per-folder node resolution
+# Runs pi on homebrew's node, bypassing mise/asdf per-folder node resolution
 exec /opt/homebrew/bin/node /opt/homebrew/lib/node_modules/@earendil-works/pi-coding-agent/dist/cli.js "$@"

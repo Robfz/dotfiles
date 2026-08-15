@@ -51,20 +51,20 @@ else
   echo "pi: ../pi-extensions not found; skipping (git clone git@github.com:Robfz/pi-extensions.git next to dotfiles)"
 fi
 
-# pi coding agent (macOS: homebrew node, wrapper bypasses asdf shims — see docs/pi.md)
+# pi coding agent (macOS: homebrew node, wrapper bypasses mise/asdf shims — see docs/pi.md)
 if [ "$(uname)" = "Darwin" ] && [ -x /opt/homebrew/bin/node ]; then
   PATH="/opt/homebrew/bin:$PATH" /opt/homebrew/bin/npm install -g @earendil-works/pi-coding-agent
   mkdir -p ~/.local/bin
   cp -f bin/pi ~/.local/bin/pi
   cp -f bin/pi-npm ~/.local/bin/pi-npm
-  # let pi's self-update and extension installs run npm without asdf's node resolution
+  # let pi's self-update and extension installs run npm without mise/asdf node resolution
   if command -v jq > /dev/null; then
     mkdir -p ~/.pi/agent
     [ -f ~/.pi/agent/settings.json ] || echo '{}' > ~/.pi/agent/settings.json
     jq --arg cmd "$HOME/.local/bin/pi-npm" '.npmCommand = [$cmd]' \
       ~/.pi/agent/settings.json > ~/.pi/agent/settings.json.tmp && mv ~/.pi/agent/settings.json.tmp ~/.pi/agent/settings.json
   else
-    echo "pi: jq not found; skipping npmCommand setting (pi update/extension installs may fail in folders without an asdf node)"
+    echo "pi: jq not found; skipping npmCommand setting (pi update/extension installs may fail in folders without a pinned node)"
   fi
 else
   echo "pi: homebrew node not found; skipping pi install"

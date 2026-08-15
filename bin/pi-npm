@@ -2,5 +2,5 @@
 # npm for pi's self-update and extension installs (see docs/pi.md).
 # Runs homebrew's npm via its JS entry point (no shebang/PATH node resolution)
 # and prepends homebrew to PATH so npm lifecycle scripts (`sh -c node ...`)
-# resolve the same node instead of asdf's per-folder shim.
+# resolve the same node instead of mise/asdf per-folder shims.
 PATH="/opt/homebrew/bin:$PATH" exec /opt/homebrew/bin/node /opt/homebrew/lib/node_modules/npm/bin/npm-cli.js "$@"
