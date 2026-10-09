@@ -71,6 +71,30 @@ if command -v eza &>/dev/null; then
   alias lt='eza --tree --level=2'
 fi
 
+# Functions
+
+# hwt <name> <branch> [base] [herdr flags...]
+# Creates a Herdr worktree next to the main checkout, bypassing Herdr's default location:
+#   <project>/main layout → <project>/<name>
+#   flat repo layout      → <parent>/<repo>-<name>
+hwt() {
+  if (( $# < 2 )); then
+    print -u2 'usage: hwt <name> <branch> [base] [herdr flags...]'
+    return 1
+  fi
+  local common
+  common=$(git rev-parse --path-format=absolute --git-common-dir) || return
+  local main=${common:h} dest
+  if [[ ${main:t} == main ]]; then
+    dest=${main:h}/$1
+  else
+    dest=${main:h}/${main:t}-$1
+  fi
+  local -a args=(--cwd "$PWD" --path "$dest" --branch "$2")
+  [[ -n $3 ]] && args+=(--base "$3")
+  herdr worktree create "${args[@]}" "${@:4}"
+}
+
 # Tools
 eval "$(mise activate zsh)"
 export PATH="$HOME/.local/bin:$PATH"
