@@ -73,26 +73,29 @@ fi
 
 # Functions
 
-# hwt <name> <branch> [base] [herdr flags...]
+# hwt <name> [branch] [base] [herdr flags...]
 # Creates a Herdr worktree next to the main checkout, bypassing Herdr's default location:
 #   <project>/main layout → <project>/<name>
 #   flat repo layout      → <parent>/<repo>-<name>
+# A single argument is used as both the worktree name and the branch name.
 hwt() {
-  if (( $# < 2 )); then
-    print -u2 'usage: hwt <name> <branch> [base] [herdr flags...]'
+  if (( $# < 1 )); then
+    print -u2 'usage: hwt <name> [branch] [base] [herdr flags...]'
     return 1
   fi
+  local name=$1 branch=$1
+  (( $# >= 2 )) && branch=$2
   local common
   common=$(git rev-parse --path-format=absolute --git-common-dir) || return
   local main=${common:h} dest
   if [[ ${main:t} == main ]]; then
-    dest=${main:h}/$1
+    dest=${main:h}/$name
   else
-    dest=${main:h}/${main:t}-$1
+    dest=${main:h}/${main:t}-$name
   fi
-  local -a args=(--cwd "$PWD" --path "$dest" --branch "$2")
+  local -a args=(--cwd "$PWD" --path "$dest" --branch "$branch")
   [[ -n $3 ]] && args+=(--base "$3")
-  herdr worktree create "${args[@]}" "${@:4}"
+  herdr worktree create "${args[@]}" "${@:4}" >/dev/null
 }
 
 # Tools
