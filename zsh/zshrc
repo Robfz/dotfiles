@@ -99,8 +99,19 @@ hwt() {
 }
 
 # Tools
+# ~/.local/bin has to stay ahead of mise. Activation records PATH, then the
+# precmd hook rewrites it and puts tool bins first. In Ghostty the login PATH
+# does not already contain ~/.local/bin, so the prepend below survives.
+# Herdr's core is started with ~/.local/bin already set; path_helper keeps a
+# second copy at the end, and the next mise rewrite drops the front one.
+# `pi` then resolves to mise's Node install instead of the Homebrew wrapper.
 eval "$(mise activate zsh)"
-export PATH="$HOME/.local/bin:$PATH"
+_prefer_local_bin() {
+  path=("$HOME/.local/bin" ${path:#$HOME/.local/bin})
+}
+add-zsh-hook -d precmd _prefer_local_bin 2>/dev/null
+add-zsh-hook precmd _prefer_local_bin
+_prefer_local_bin
 
 # Machine-local secrets and overrides (not committed)
 [[ -f ~/.zshrc.local ]] && source ~/.zshrc.local
