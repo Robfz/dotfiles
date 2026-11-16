@@ -33,6 +33,12 @@ cp -f zed/themes/* ~/.config/zed/themes/
 mkdir -p ~/.config/herdr
 cp -f herdr/config.toml ~/.config/herdr/config.toml
 
+# herdr app
+mkdir -p ~/.config/herdr-app
+cp -f herdr-app/keys.json ~/.config/herdr-app/keys.json
+mkdir -p ~/.config/herdr-app/mods
+cp -Rf herdr-app/mods/. ~/.config/herdr-app/mods/
+
 # claude
 mkdir -p ~/.claude
 cp -f claude/statusline-command.sh ~/.claude/statusline-command.sh
