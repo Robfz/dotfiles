@@ -17,9 +17,14 @@ Three pieces, all applied by `install.sh` (macOS only, requires homebrew node):
 
 2. **Wrapper** (`bin/pi` → `~/.local/bin/pi`): runs pi's entry point with
    `/opt/homebrew/bin/node` directly, bypassing shebang/PATH resolution.
-   `~/.local/bin` is prepended after mise activation in `zsh/zshrc`, so the
-   wrapper always wins — including over the `pi` symlink npm drops in
-   `/opt/homebrew/bin` (harmless, leave it; npm recreates it on update).
+   `zsh/zshrc` defines a `pi` shell function that calls this wrapper.
+   Prepending `~/.local/bin` to PATH is *not* enough on its own: mise's hook
+   rebuilds PATH on every directory change and puts its tool paths (e.g.
+   `~/.local/share/mise/installs/node/<ver>/bin`, shims) back in front. A shell
+   function takes precedence over any PATH lookup, so the wrapper always wins —
+   over the `pi` symlink npm drops in `/opt/homebrew/bin` (harmless, leave it;
+   npm recreates it on update) and over any copy accidentally installed into a
+   mise node (see Gotchas).
 
 3. **npm wrapper for pi** (`bin/pi-npm` → `~/.local/bin/pi-npm`, wired via
    `npmCommand` in `~/.pi/agent/settings.json`): pi spawns npm for
@@ -53,6 +58,13 @@ no re-copy. Re-running `install.sh` also updates it.
   of any mise/`.tool-versions` pin. Subprocesses pi spawns (bash tool, etc.)
   still see the normal PATH, so mise resolution inside pi sessions is
   unaffected.
+- Never `npm install -g` pi under a mise node. It leaves a stale copy in that
+  node's `bin` plus a `mise/shims/pi` shim. The shell function still wins in
+  interactive zsh, but non-interactive callers that resolve `pi` via PATH would
+  pick it up. Check with `which -a pi` and remove it with
+  `mise exec node@<ver> -- npm uninstall -g @earendil-works/pi-coding-agent && mise reshim`.
+- The `pi` function only exists in interactive zsh. Scripts and other tools
+  that launch `pi` should call `~/.local/bin/pi` explicitly.
 - Node runtime flags (e.g. `--inspect`) can't be passed through the wrapper;
   insert them before the script path in `bin/pi` if ever needed for debugging.
 - The package lives under the `@earendil-works` npm scope; the old
