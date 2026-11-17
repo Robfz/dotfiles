@@ -72,8 +72,13 @@ if command -v eza &>/dev/null; then
 fi
 
 # Tools
-eval "$(mise activate zsh)"
+command -v mise &>/dev/null && eval "$(mise activate zsh)"
 export PATH="$HOME/.local/bin:$PATH"
+
+# Pin pi to the homebrew-node wrapper. mise's hook re-prepends its own paths on
+# every directory change, so PATH order alone can't keep ~/.local/bin/pi first
+# (see docs/pi.md).
+pi() { "$HOME/.local/bin/pi" "$@"; }
 
 # Machine-local secrets and overrides (not committed)
 [[ -f ~/.zshrc.local ]] && source ~/.zshrc.local
